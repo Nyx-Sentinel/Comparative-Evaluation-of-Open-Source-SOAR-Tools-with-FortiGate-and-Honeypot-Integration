@@ -1,0 +1,50 @@
+{
+  "name": "PB4 - TheHive Case Creation",
+  "description": "Creates a structured case in TheHive with observables from the incoming alert.",
+  "trigger": {
+    "type": "webhook",
+    "id": "webhook_ca7036b6-fc1b-41c2-92db-66295f932188"
+  },
+  "actions": [
+    {
+      "id": "create_case",
+      "name": "Create TheHive Case",
+      "app": "TheHive",
+      "action": "create_case",
+      "parameters": {
+        "url": "http://localhost:9000",
+        "api_key": "THEHIVE_API_KEY",
+        "case": {
+          "title": "SOAR Alert: $exec.type from $exec.src_ip",
+          "description": "Automated case created by Shuffle SOAR.\n\nSensor: $exec.type\nSource IP: $exec.src_ip\nDestination Port: $exec.dest_port\nTimestamp: $exec.@timestamp",
+          "severity": 2,
+          "tlp": 2,
+          "tags": ["soar-automated", "$exec.type", "t-pot"]
+        }
+      }
+    },
+    {
+      "id": "add_observable",
+      "name": "Add IP Observable",
+      "app": "TheHive",
+      "action": "create_observable",
+      "parameters": {
+        "case_id": "$create_case.id",
+        "observable": {
+          "dataType": "ip",
+          "data": "$exec.src_ip",
+          "message": "Source IP from T-Pot alert",
+          "tlp": 2,
+          "ioc": true,
+          "tags": ["source-ip", "attacker"]
+        }
+      }
+    }
+  ],
+  "notes": [
+    "TheHive must be installed and accessible at localhost:9000",
+    "Generate API key from TheHive admin panel",
+    "Severity: 1=Low, 2=Medium, 3=High, 4=Critical",
+    "TLP: 0=White, 1=Green, 2=Amber, 3=Red"
+  ]
+}

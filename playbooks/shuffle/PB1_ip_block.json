@@ -1,0 +1,61 @@
+{
+  "name": "PB1 - IP Block via FortiGate",
+  "description": "Extracts src_ip from incoming alert and creates an address object + deny policy on FortiGate via REST API. Triggered by Shuffle webhook receiving T-Pot or FortiGate logs.",
+  "trigger": {
+    "type": "webhook",
+    "id": "webhook_ca7036b6-fc1b-41c2-92db-66295f932188",
+    "description": "Receives JSON events from T-Pot Logstash and SOAR Logstash pipelines"
+  },
+  "actions": [
+    {
+      "id": "extract_ip",
+      "name": "Extract Source IP",
+      "app": "Shuffle Tools",
+      "action": "parse_value",
+      "parameters": {
+        "input": "$exec.src_ip",
+        "description": "Extract the source IP from the incoming alert payload"
+      }
+    },
+    {
+      "id": "create_address_object",
+      "name": "Create FortiGate Address Object",
+      "app": "HTTP",
+      "action": "POST",
+      "parameters": {
+        "url": "https://FORTIGATE_IP/api/v2/cmdb/firewall/address",
+        "headers": {
+          "Authorization": "Bearer FORTIGATE_API_TOKEN",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "SOAR-block-$extract_ip.#1",
+          "type": "ipmask",
+          "subnet": "$extract_ip.#1/32"
+        }
+      }
+    },
+    {
+      "id": "add_to_block_group",
+      "name": "Add IP to Block Address Group",
+      "app": "HTTP",
+      "action": "PUT",
+      "parameters": {
+        "url": "https://FORTIGATE_IP/api/v2/cmdb/firewall/addrgrp/SOAR-blocked-ips",
+        "headers": {
+          "Authorization": "Bearer FORTIGATE_API_TOKEN",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "member": [{"name": "SOAR-block-$extract_ip.#1"}]
+        }
+      }
+    }
+  ],
+  "notes": [
+    "Replace FORTIGATE_IP with your FortiGate management IP",
+    "Replace FORTIGATE_API_TOKEN with your FortiGate REST API token",
+    "Create address group 'SOAR-blocked-ips' in FortiGate and add to deny policy before activating",
+    "This playbook fires on EVERY incoming event — add IP validation/whitelist logic as needed"
+  ]
+}

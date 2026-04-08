@@ -1,0 +1,44 @@
+{
+  "name": "PB2 - Alert Enrichment via AbuseIPDB",
+  "description": "Queries AbuseIPDB for the source IP reputation score. Attaches confidence score and country to the alert for analyst context.",
+  "trigger": {
+    "type": "webhook",
+    "id": "webhook_ca7036b6-fc1b-41c2-92db-66295f932188",
+    "description": "Same webhook as PB1 — runs in parallel"
+  },
+  "actions": [
+    {
+      "id": "query_abuseipdb",
+      "name": "Query AbuseIPDB",
+      "app": "HTTP",
+      "action": "GET",
+      "parameters": {
+        "url": "https://api.abuseipdb.com/api/v2/check",
+        "headers": {
+          "Key": "ABUSEIPDB_API_KEY",
+          "Accept": "application/json"
+        },
+        "query_params": {
+          "ipAddress": "$exec.src_ip",
+          "maxAgeInDays": "90",
+          "verbose": "true"
+        }
+      }
+    },
+    {
+      "id": "parse_score",
+      "name": "Parse Confidence Score",
+      "app": "Shuffle Tools",
+      "action": "parse_value",
+      "parameters": {
+        "input": "$query_abuseipdb.data.abuseConfidenceScore",
+        "description": "Extract confidence score from AbuseIPDB response"
+      }
+    }
+  ],
+  "notes": [
+    "Register at https://www.abuseipdb.com to get a free API key",
+    "Free tier allows 1000 requests/day — sufficient for thesis evaluation",
+    "Response includes: abuseConfidenceScore (0-100), countryCode, isp, usageType, totalReports"
+  ]
+}

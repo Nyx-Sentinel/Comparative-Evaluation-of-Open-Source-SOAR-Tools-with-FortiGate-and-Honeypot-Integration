@@ -1,0 +1,91 @@
+<!-- =============================================================
+     Custom Wazuh Detection Rules for Thesis Evaluation
+     File: /var/ossec/etc/rules/thesis_rules.xml
+     
+     These rules map T-Pot honeypot event types to Wazuh alerts
+     so that Wazuh can detect and respond to the same attack types
+     as Shuffle, enabling a fair comparison.
+     ============================================================= -->
+
+<group name="thesis,tpot,honeypot">
+
+  <!-- SSH Brute-Force via Cowrie -->
+  <rule id="100001" level="10">
+    <field name="type">Cowrie</field>
+    <field name="eventid">cowrie.login.failed</field>
+    <description>T-Pot Cowrie: SSH brute-force login attempt</description>
+    <group>authentication_failures,brute_force</group>
+  </rule>
+
+  <rule id="100002" level="12">
+    <field name="type">Cowrie</field>
+    <field name="eventid">cowrie.login.success</field>
+    <description>T-Pot Cowrie: SSH brute-force login SUCCESS (high priority)</description>
+    <group>authentication_success,brute_force,high_priority</group>
+  </rule>
+
+  <!-- Malware / SMB via Dionaea -->
+  <rule id="100010" level="10">
+    <field name="type">Dionaea</field>
+    <description>T-Pot Dionaea: Malware delivery or SMB exploitation attempt</description>
+    <group>malware,exploitation</group>
+  </rule>
+
+  <!-- HTTP Attacks via Tanner -->
+  <rule id="100020" level="8">
+    <field name="type">Tanner</field>
+    <description>T-Pot Tanner: Web application attack attempt</description>
+    <group>web_attack,http</group>
+  </rule>
+
+  <!-- Network Scans via Honeytrap -->
+  <rule id="100030" level="6">
+    <field name="type">Honeytrap</field>
+    <description>T-Pot Honeytrap: Network probe or reconnaissance scan</description>
+    <group>network_scan,recon</group>
+  </rule>
+
+  <!-- ICS/SCADA via ConPot -->
+  <rule id="100040" level="8">
+    <field name="type">ConPot</field>
+    <description>T-Pot ConPot: ICS/SCADA protocol probe detected</description>
+    <group>ics_scada,industrial</group>
+  </rule>
+
+  <!-- IDS alerts via Suricata -->
+  <rule id="100050" level="10">
+    <field name="type">Suricata</field>
+    <field name="alert.severity">1</field>
+    <description>T-Pot Suricata IDS: High severity network signature match</description>
+    <group>ids_alert,network</group>
+  </rule>
+
+  <rule id="100051" level="7">
+    <field name="type">Suricata</field>
+    <description>T-Pot Suricata IDS: Network signature alert</description>
+    <group>ids_alert,network</group>
+  </rule>
+
+  <!-- FortiGate IPS alerts -->
+  <rule id="100060" level="10">
+    <field name="type">fortigate</field>
+    <field name="subtype">ips</field>
+    <description>FortiGate IPS: Intrusion prevention signature triggered</description>
+    <group>ips,fortigate,network</group>
+  </rule>
+
+  <rule id="100061" level="8">
+    <field name="type">fortigate</field>
+    <field name="subtype">webfilter</field>
+    <description>FortiGate: Web filter event detected</description>
+    <group>webfilter,fortigate</group>
+  </rule>
+
+  <!-- Brute-force frequency rule: 5+ attempts in 60s -->
+  <rule id="100070" level="12" frequency="5" timeframe="60">
+    <if_matched_sid>100001</if_matched_sid>
+    <description>T-Pot Cowrie: SSH brute-force attack (5+ attempts in 60s)</description>
+    <group>authentication_failures,brute_force,high_priority</group>
+  </rule>
+
+</group>

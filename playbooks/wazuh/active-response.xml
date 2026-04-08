@@ -1,0 +1,43 @@
+<!-- =============================================================
+     Wazuh Active Response Configuration
+     Add this block inside <ossec_config> in /var/ossec/etc/ossec.conf
+     
+     This configures Wazuh to automatically block attacker IPs
+     using the firewall-drop script when high-severity alerts fire.
+     ============================================================= -->
+
+<ossec_config>
+
+  <!-- Active Response: Block attacker IP via firewall-drop -->
+  <active-response>
+    <command>firewall-drop</command>
+    <location>local</location>
+    <!-- Fire on Wazuh rules with level >= 10 (high severity) -->
+    <level>10</level>
+    <!-- Block duration in seconds (0 = permanent) -->
+    <timeout>600</timeout>
+  </active-response>
+
+  <!-- Custom command: forward alert to TheHive via Python script -->
+  <command>
+    <name>thehive-case</name>
+    <executable>thehive-connector.py</executable>
+    <timeout_allowed>yes</timeout_allowed>
+  </command>
+
+  <active-response>
+    <command>thehive-case</command>
+    <location>server</location>
+    <level>8</level>
+    <timeout>0</timeout>
+  </active-response>
+
+  <!-- Integration: Forward alerts to Shuffle webhook -->
+  <integration>
+    <name>shuffle</name>
+    <hook_url>http://localhost:3001/api/v1/hooks/webhook_ca7036b6-fc1b-41c2-92db-66295f932188</hook_url>
+    <level>3</level>
+    <alert_format>json</alert_format>
+  </integration>
+
+</ossec_config>

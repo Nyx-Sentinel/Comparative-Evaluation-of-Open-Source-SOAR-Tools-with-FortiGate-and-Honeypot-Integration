@@ -1,0 +1,27 @@
+{
+  "name": "PB3 - Slack Notification",
+  "description": "Sends a formatted alert summary to a Slack channel when an alert is triggered.",
+  "trigger": {
+    "type": "webhook",
+    "id": "webhook_ca7036b6-fc1b-41c2-92db-66295f932188"
+  },
+  "actions": [
+    {
+      "id": "send_slack",
+      "name": "Send Slack Alert",
+      "app": "Slack",
+      "action": "send_message",
+      "parameters": {
+        "webhook_url": "SLACK_WEBHOOK_URL",
+        "message": {
+          "text": ":rotating_light: *SOAR Alert Triggered*\n*Type:* $exec.type\n*Source IP:* $exec.src_ip\n*Destination Port:* $exec.dest_port\n*Sensor:* $exec.t-pot_hostname\n*Timestamp:* $exec.@timestamp"
+        }
+      }
+    }
+  ],
+  "notes": [
+    "Create a Slack incoming webhook at https://api.slack.com/messaging/webhooks",
+    "Replace SLACK_WEBHOOK_URL with your actual webhook URL",
+    "Adjust message fields to match your alert schema"
+  ]
+}

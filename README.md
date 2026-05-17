@@ -3,7 +3,7 @@
 Master's Thesis in Cybersecurity (EXD630, 15 HE credits) Högskolan Väst Trollhätan
 Students: Filmon Mehari Gebrezghi & Alphonse Joseph  
 Supervisor: Robert Andersson  
-Start year: 2025
+Start year: 2026
 
 ## Overview
  

@@ -196,7 +196,7 @@ Wazuh forwards alerts to TheHive via a custom Python integration script at `/var
  
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/FilmonMeharii/Comparative-Evaluation-of-Open-Source-SOAR-Tools-with-FortiGate-and-Honeypot-Integration.git
+git clone https://github.com/Nyx-Sentinel/Comparative-Evaluation-of-Open-Source-SOAR-Tools-with-FortiGate-and-Honeypot-Integration.git
 cd Comparative-Evaluation-of-Open-Source-SOAR-Tools-with-FortiGate-and-Honeypot-Integration
 ```
  

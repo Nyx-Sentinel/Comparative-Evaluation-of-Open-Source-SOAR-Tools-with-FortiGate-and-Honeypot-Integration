@@ -1,0 +1,67 @@
+# ============================================================
+# .gitignore — SOAR Thesis Repository
+# ============================================================
+# IMPORTANT: Never commit API keys, passwords, or real IPs.
+# Replace all sensitive values with placeholders before pushing.
+# ============================================================
+
+# ── Secrets and API keys ──────────────────────────────────────
+*.env
+.env
+.env.*
+secrets.txt
+secrets.json
+api_keys.txt
+credentials.txt
+
+# ── Logs and monitoring data ──────────────────────────────────
+*.log
+*.csv
+/data/raw/
+/data/logs/
+resource_log.csv
+active-responses.log
+custom-thehive.log
+
+# ── Large data files ──────────────────────────────────────────
+*.gz
+*.zip
+*.tar
+*.pcap
+eve.json
+cowrie.json
+attackers.json
+
+# ── Python ────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# ── OS files ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor files ──────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── Docker ────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── Certificates ─────────────────────────────────────────────
+*.pem
+*.key
+*.crt
+*.p12

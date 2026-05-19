@@ -1,0 +1,22 @@
+[Unit]
+Description=SOAR Proxy — Flask Gateway for Shuffle and Wazuh
+Documentation=https://github.com/Nyx-Sentinel/Comparative-Evaluation-of-Open-Source-SOAR-Tools-with-FortiGate-and-Honeypot-Integration
+After=network.target
+
+[Service]
+Type=simple
+User=soar
+WorkingDirectory=/opt/scripts
+ExecStart=/usr/bin/python3 /opt/scripts/abuseipdb_proxy.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Environment variables (optional — or hardcode in script)
+# Environment=ABUSEIPDB_KEY=your_key_here
+# Environment=THEHIVE_KEY=your_key_here
+# Environment=FORTIGATE_KEY=your_key_here
+
+[Install]
+WantedBy=multi-user.target

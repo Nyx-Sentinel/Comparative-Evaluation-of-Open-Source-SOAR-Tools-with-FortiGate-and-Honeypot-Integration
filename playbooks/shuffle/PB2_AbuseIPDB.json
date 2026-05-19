@@ -1,0 +1,49 @@
+{
+  "id": "pb2-abuseipdb-enrichment",
+  "name": "PB2 - AbuseIPDB Threat Intelligence Enrichment",
+  "description": "Playbook 2: Extracts source IP from T-Pot webhook alert and queries AbuseIPDB via SOAR proxy to retrieve abuse confidence score, country of origin, and ISP information.",
+  "tags": ["abuseipdb", "enrichment", "threat-intelligence", "PB2"],
+  "triggers": [
+    {
+      "type": "webhook",
+      "name": "T-Pot Alert Webhook",
+      "description": "Receives alerts from T-Pot Logstash HTTP output",
+      "note": "Can share same webhook as PB1 or use separate trigger"
+    }
+  ],
+  "actions": [
+    {
+      "id": "action-1",
+      "name": "Extract Source IP",
+      "app": "Shuffle Tools",
+      "action": "get_cache_value",
+      "description": "Extract src_ip field from incoming webhook payload",
+      "parameters": {
+        "input": "$exec.src_ip"
+      }
+    },
+    {
+      "id": "action-2",
+      "name": "Query AbuseIPDB",
+      "app": "HTTP",
+      "action": "GET",
+      "description": "Query AbuseIPDB reputation via SOAR proxy /check endpoint. Proxy calls AbuseIPDB API and returns score, country, ISP.",
+      "parameters": {
+        "url": "http://172.19.0.1:9090/check?ip=$action-1.output",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "note": "Returns JSON with abuseConfidenceScore, countryCode, isp, totalReports"
+      }
+    }
+  ],
+  "notes": {
+    "average_latency": "3.0 seconds",
+    "bottleneck": "Docker container spawn + external AbuseIPDB API call",
+    "success_rate": "100% (50/50 test executions)",
+    "proxy_route": "GET /check?ip=X",
+    "abuseipdb_fields": "abuseConfidenceScore, countryCode, isp, totalReports, domain",
+    "key_finding": "7 of 21 checked IPs (33%) had 100% abuse confidence score",
+    "setup": "AbuseIPDB API key is configured in SOAR proxy, not in this playbook"
+  }
+}

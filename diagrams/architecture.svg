@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="900" height="600" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+
+<defs>
+  <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+  <marker id="arr-dash" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- Background -->
+<rect width="900" height="600" fill="#ffffff"/>
+
+<!-- Title -->
+<text x="450" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#1a1a1a">Implementation Overview – Testbed Architecture</text>
+
+<!-- ── Internet cloud ── -->
+<ellipse cx="70" cy="230" rx="58" ry="70" fill="#f5f5f5" stroke="#999" stroke-width="1.2" stroke-dasharray="5 3"/>
+<text x="70" y="215" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Internet</text>
+<text x="70" y="231" text-anchor="middle" font-size="12" fill="#333">/</text>
+<text x="70" y="247" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Attackers</text>
+
+<!-- circled numbers -->
+<circle cx="148" cy="148" r="10" fill="white" stroke="#333" stroke-width="1"/>
+<text x="148" y="153" text-anchor="middle" font-size="11" fill="#333">1</text>
+<text x="162" y="143" font-size="10" fill="#555">Malicious traffic</text>
+
+<circle cx="148" cy="310" r="10" fill="white" stroke="#333" stroke-width="1"/>
+<text x="148" y="315" text-anchor="middle" font-size="11" fill="#333">2</text>
+<text x="162" y="305" font-size="10" fill="#555">Attacks</text>
+<text x="162" y="319" font-size="10" fill="#555">(multi-protocol)</text>
+
+<!-- arrows from internet -->
+<line x1="128" y1="175" x2="185" y2="155" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+<line x1="128" y1="285" x2="185" y2="310" stroke="#666" stroke-width="1.2" marker-end="url(#arr)"/>
+
+<!-- ── FortiGate ── -->
+<rect x="185" y="124" width="140" height="64" rx="10" fill="#d4edda" stroke="#28a745" stroke-width="1.5"/>
+<text x="255" y="145" text-anchor="middle" font-size="13" font-weight="bold" fill="#155724">FortiGate 50G</text>
+<text x="255" y="161" text-anchor="middle" font-size="11" fill="#155724">Firewall</text>
+<text x="255" y="177" text-anchor="middle" font-size="10" fill="#155724">193.10.203.159</text>
+
+<!-- ── Machine 1 outer ── -->
+<rect x="185" y="262" width="140" height="234" rx="10" fill="#d4edda" stroke="#28a745" stroke-width="1.5"/>
+<text x="255" y="282" text-anchor="middle" font-size="12" font-weight="bold" fill="#155724">Machine 1 – T-Pot</text>
+<text x="255" y="296" text-anchor="middle" font-size="10" fill="#155724">193.10.203.150</text>
+<rect x="196" y="304" width="118" height="180" rx="6" fill="white" stroke="#28a745" stroke-width="0.8"/>
+<text x="207" y="320" font-size="10" fill="#333">Running services:</text>
+<text x="207" y="335" font-size="10" fill="#333">Cowrie (SSH)</text>
+<text x="207" y="349" font-size="10" fill="#333">Dionaea (SMB)</text>
+<text x="207" y="363" font-size="10" fill="#333">Suricata (IDS)</text>
+<text x="207" y="377" font-size="10" fill="#333">Honeytrap</text>
+<text x="207" y="391" font-size="10" fill="#333">Tanner / H0neytr4p</text>
+<text x="207" y="405" font-size="10" fill="#333">p0f · Logstash</text>
+<text x="207" y="419" font-size="10" font-weight="bold" fill="#155724">Wazuh Agent</text>
+<text x="207" y="433" font-size="10" fill="#155724">(reports → :1516)</text>
+<text x="207" y="471" font-size="10" fill="#333">Beats → :5044</text>
+
+<!-- ── Machine 2 outer ── -->
+<rect x="345" y="48" width="540" height="500" rx="12" fill="#d4edda" stroke="#28a745" stroke-width="1.5"/>
+<text x="615" y="70" text-anchor="middle" font-size="14" font-weight="bold" fill="#155724">Machine 2 – SOAR Server  (193.10.203.151)</text>
+
+<!-- Logstash inside Machine 2 -->
+<rect x="360" y="88" width="110" height="110" rx="8" fill="#cce5ff" stroke="#004085" stroke-width="1.2"/>
+<text x="415" y="108" text-anchor="middle" font-size="12" font-weight="bold" fill="#004085">Logstash</text>
+<text x="415" y="124" text-anchor="middle" font-size="10" fill="#004085">ports 5044, 514</text>
+<text x="415" y="140" text-anchor="middle" font-size="10" fill="#004085">custom-developed</text>
+<text x="415" y="155" text-anchor="middle" font-size="10" fill="#004085">configuration</text>
+<text x="415" y="171" text-anchor="middle" font-size="10" fill="#004085">→ Shuffle webhook</text>
+<text x="415" y="187" text-anchor="middle" font-size="10" fill="#004085">→ Wazuh TCP</text>
+
+<!-- Shuffle Stack -->
+<rect x="490" y="80" width="130" height="130" rx="8" fill="#f0f0f0" stroke="#888" stroke-width="1"/>
+<text x="555" y="98" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Shuffle Stack</text>
+<rect x="500" y="106" width="110" height="42" rx="6" fill="#e8d5f5" stroke="#7c4dbb" stroke-width="1"/>
+<text x="555" y="122" text-anchor="middle" font-size="11" font-weight="bold" fill="#4a148c">Shuffle</text>
+<text x="555" y="138" text-anchor="middle" font-size="10" fill="#4a148c">Orchestrator :3001</text>
+<rect x="500" y="154" width="110" height="42" rx="6" fill="#e0e0e0" stroke="#888" stroke-width="1"/>
+<text x="555" y="170" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">OpenSearch</text>
+<text x="555" y="186" text-anchor="middle" font-size="10" fill="#333">port 9200</text>
+
+<!-- Wazuh Stack -->
+<rect x="490" y="228" width="130" height="160" rx="8" fill="#f0f0f0" stroke="#888" stroke-width="1"/>
+<text x="555" y="246" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Wazuh Stack</text>
+<rect x="500" y="254" width="110" height="38" rx="6" fill="#ffd5c8" stroke="#c0392b" stroke-width="1"/>
+<text x="555" y="268" text-anchor="middle" font-size="11" font-weight="bold" fill="#7b241c">Wazuh Indexer</text>
+<text x="555" y="282" text-anchor="middle" font-size="10" fill="#7b241c">port 9201</text>
+<rect x="500" y="298" width="110" height="38" rx="6" fill="#ffd5c8" stroke="#c0392b" stroke-width="1"/>
+<text x="555" y="312" text-anchor="middle" font-size="11" font-weight="bold" fill="#7b241c">Wazuh Manager</text>
+<text x="555" y="326" text-anchor="middle" font-size="10" fill="#7b241c">port 1516</text>
+<rect x="500" y="342" width="110" height="34" rx="6" fill="#ffd5c8" stroke="#c0392b" stroke-width="1"/>
+<text x="555" y="364" text-anchor="middle" font-size="10" fill="#7b241c">Dashboard :443</text>
+
+<!-- SOAR Proxy -->
+<rect x="645" y="108" width="120" height="116" rx="8" fill="#cce5ff" stroke="#004085" stroke-width="1.5"/>
+<text x="705" y="128" text-anchor="middle" font-size="12" font-weight="bold" fill="#004085">SOAR Proxy</text>
+<text x="705" y="144" text-anchor="middle" font-size="10" fill="#004085">port 9090</text>
+<text x="705" y="158" text-anchor="middle" font-size="10" fill="#004085">custom Flask</text>
+<text x="655" y="174" font-size="10" fill="#004085">Routes: /block</text>
+<text x="655" y="188" font-size="10" fill="#004085">       /check</text>
+<text x="655" y="202" font-size="10" fill="#004085">       /notify /case</text>
+
+<!-- TheHive -->
+<rect x="645" y="240" width="120" height="44" rx="8" fill="#d4edda" stroke="#28a745" stroke-width="1"/>
+<text x="705" y="258" text-anchor="middle" font-size="11" font-weight="bold" fill="#155724">TheHive</text>
+<text x="705" y="274" text-anchor="middle" font-size="10" fill="#155724">port 9000</text>
+
+<!-- Cortex -->
+<rect x="645" y="292" width="120" height="44" rx="8" fill="#d4edda" stroke="#28a745" stroke-width="1"/>
+<text x="705" y="310" text-anchor="middle" font-size="11" font-weight="bold" fill="#155724">Cortex</text>
+<text x="705" y="326" text-anchor="middle" font-size="10" fill="#155724">port 9001</text>
+
+<!-- External APIs label -->
+<rect x="645" y="350" width="120" height="70" rx="8" fill="#fff3cd" stroke="#856404" stroke-width="1" stroke-dasharray="4 2"/>
+<text x="705" y="368" text-anchor="middle" font-size="11" font-weight="bold" fill="#856404">External APIs</text>
+<text x="655" y="384" font-size="10" fill="#856404">AbuseIPDB</text>
+<text x="655" y="398" font-size="10" fill="#856404">FortiGate REST</text>
+<text x="655" y="412" font-size="10" fill="#856404">Slack webhook</text>
+
+<!-- Playbooks summary -->
+<rect x="360" y="216" width="118" height="172" rx="8" fill="white" stroke="#888" stroke-width="0.8" stroke-dasharray="3 2"/>
+<text x="419" y="234" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Playbooks</text>
+<text x="369" y="250" font-size="9.5" fill="#4a148c" font-weight="bold">Shuffle PB1-PB4:</text>
+<text x="369" y="264" font-size="9.5" fill="#333">IP blocking (FortiGate)</text>
+<text x="369" y="278" font-size="9.5" fill="#333">AbuseIPDB enrichment</text>
+<text x="369" y="292" font-size="9.5" fill="#333">TheHive notification</text>
+<text x="369" y="306" font-size="9.5" fill="#333">TheHive case creation</text>
+<text x="369" y="322" font-size="9.5" fill="#7b241c" font-weight="bold">Wazuh WZ-PB1-4:</text>
+<text x="369" y="336" font-size="9.5" fill="#333">Same 4 actions via</text>
+<text x="369" y="350" font-size="9.5" fill="#333">active response</text>
+<text x="369" y="376" font-size="9.5" fill="#333">Avg latency:</text>
+<text x="369" y="390" font-size="9.5" fill="#4a148c">Shuffle: 2.5 s</text>
+<text x="369" y="404" font-size="9.5" fill="#7b241c">Wazuh:  0.4 s</text>
+
+<!-- ── DATA FLOW ARROWS ── -->
+
+<!-- FortiGate → Logstash (syslog) -->
+<path d="M255 188 L255 218 L415 218 L415 198" fill="none" stroke="#28a745" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="310" y="214" font-size="10" fill="#155724">Syslog UDP :514</text>
+
+<!-- T-Pot Beats → Logstash -->
+<path d="M325 390 L350 390 L350 143 L360 143" fill="none" stroke="#28a745" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="333" y="280" font-size="10" fill="#155724" transform="rotate(-90, 342, 290)">Beats TCP :5044</text>
+
+<!-- T-Pot Wazuh Agent → Wazuh Manager -->
+<path d="M325 420 L480 420 L480 317 L490 317" fill="none" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="400" y="440" text-anchor="middle" font-size="10" fill="#7b241c">Wazuh Agent :1516</text>
+
+<!-- Logstash → Shuffle (HTTP output) -->
+<path d="M470 125 L490 125" fill="none" stroke="#004085" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="480" y="118" text-anchor="middle" font-size="9" fill="#004085">HTTP</text>
+
+<!-- Logstash → Wazuh (TCP output) -->
+<path d="M470 175 L480 175 L480 280 L490 280" fill="none" stroke="#004085" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="477" y="228" font-size="9" fill="#004085">TCP</text>
+
+<!-- Shuffle → Proxy -->
+<path d="M620 140 L645 155" fill="none" stroke="#7c4dbb" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Wazuh → Proxy -->
+<path d="M620 290 L640 290 L640 200 L645 180" fill="none" stroke="#c0392b" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Proxy → TheHive -->
+<line x1="705" y1="224" x2="705" y2="240" stroke="#004085" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Proxy → Cortex -->
+<line x1="705" y1="284" x2="705" y2="292" stroke="#004085" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- Proxy → External APIs -->
+<line x1="705" y1="336" x2="705" y2="350" stroke="#856404" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+
+<!-- Proxy → FortiGate (HTTPS REST API block - dashed) -->
+<path d="M645 130 L350 130 L350 116 L325 116 L255 156" fill="none" stroke="#666" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arr-dash)"/>
+<text x="450" y="122" text-anchor="middle" font-size="10" fill="#555">HTTPS REST API (IP blocking)</text>
+
+<!-- ── LEGEND at bottom ── -->
+<rect x="360" y="455" width="516" height="82" rx="8" fill="#f8f9fa" stroke="#ccc" stroke-width="1"/>
+<text x="618" y="472" text-anchor="middle" font-size="11" font-weight="bold" fill="#333">Data Flow Legend</text>
+<line x1="375" y1="490" x2="405" y2="490" stroke="#28a745" stroke-width="2" marker-end="url(#arr)"/>
+<text x="410" y="494" font-size="10" fill="#333">Attack / honeypot data flow</text>
+<line x1="375" y1="510" x2="405" y2="510" stroke="#c0392b" stroke-width="2" marker-end="url(#arr)"/>
+<text x="410" y="514" font-size="10" fill="#333">Wazuh agent data</text>
+<line x1="560" y1="490" x2="590" y2="490" stroke="#666" stroke-width="2" stroke-dasharray="5 2" marker-end="url(#arr-dash)"/>
+<text x="595" y="494" font-size="10" fill="#333">Automated response (REST API)</text>
+<line x1="560" y1="510" x2="590" y2="510" stroke="#004085" stroke-width="2" marker-end="url(#arr)"/>
+<text x="595" y="514" font-size="10" fill="#333">Internal SOAR data flow</text>
+<text x="375" y="530" font-size="10" fill="#555">33-day collection: 166,743 Suricata alerts · 304,077 Honeytrap connections · 516 Cowrie SSH sessions · 47 external attacker IPs</text>
+
+</svg>

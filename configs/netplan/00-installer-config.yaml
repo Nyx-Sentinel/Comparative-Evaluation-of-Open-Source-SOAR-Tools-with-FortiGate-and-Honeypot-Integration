@@ -1,0 +1,38 @@
+# ============================================================
+# Netplan Static IP Configuration
+# ============================================================
+# Location: /etc/netplan/00-installer-config.yaml
+#
+# Apply with: sudo netplan apply
+#
+# This config was used on BOTH machines to prevent
+# DHCP-caused IP swaps after reboots which broke all
+# configured integrations.
+#
+# SOAR Machine (193.10.203.151) and T-Pot (193.10.203.150)
+# both use this same template with different addresses.
+#
+# Replace:
+#   YOUR_MACHINE_IP   -> 193.10.203.151 (SOAR) or 193.10.203.150 (T-Pot)
+#   YOUR_GATEWAY      -> 193.10.203.129
+#   YOUR_INTERFACE    -> eth0 (check with: ip link show)
+#
+# Author: Alphonse Joseph & Filmon Mehari Gebrezghi
+# University West, 2026
+# ============================================================
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    YOUR_INTERFACE:           # Replace with: eth0, ens3, enp3s0 etc.
+      dhcp4: no
+      addresses:
+        - YOUR_MACHINE_IP/25  # e.g. 193.10.203.151/25 (SOAR) or 193.10.203.150/25 (T-Pot)
+      routes:
+        - to: default
+          via: YOUR_GATEWAY   # e.g. 193.10.203.129
+      nameservers:
+        addresses:
+          - 8.8.8.8
+          - 8.8.4.4

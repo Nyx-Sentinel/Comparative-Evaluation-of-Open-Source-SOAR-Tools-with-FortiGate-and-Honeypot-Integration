@@ -1,0 +1,54 @@
+{
+  "id": "pb1-ip-block",
+  "name": "PB1 - Automated IP Blocking",
+  "description": "Playbook 1: Extracts source IP from T-Pot webhook alert and blocks it on FortiGate firewall via SOAR proxy REST API call. Triggered by Logstash HTTP output webhook.",
+  "tags": ["fortigate", "ip-block", "automated-response", "PB1"],
+  "triggers": [
+    {
+      "type": "webhook",
+      "name": "T-Pot Alert Webhook",
+      "description": "Receives alerts from T-Pot Logstash HTTP output",
+      "note": "IMPORTANT: Copy webhook URL from Shuffle UI and paste into Logstash HTTP output config"
+    }
+  ],
+  "actions": [
+    {
+      "id": "action-1",
+      "name": "Extract Source IP",
+      "app": "Shuffle Tools",
+      "action": "get_cache_value",
+      "description": "Extract src_ip field from incoming webhook payload",
+      "parameters": {
+        "input": "$exec.src_ip",
+        "note": "Field name may vary — check your Logstash output format. Common alternatives: $exec.body.src_ip, $exec.srcip, $exec.data.src_ip"
+      }
+    },
+    {
+      "id": "action-2",
+      "name": "Block IP on FortiGate",
+      "app": "HTTP",
+      "action": "POST",
+      "description": "Send POST request to SOAR proxy /block endpoint. Proxy forwards to FortiGate REST API to create deny address object.",
+      "parameters": {
+        "url": "http://172.19.0.1:9090/block",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "ip": "$action-1.output",
+          "alert_id": "$exec.id",
+          "source": "shuffle-pb1"
+        },
+        "note": "172.19.0.1 is the Docker bridge gateway IP — this reaches the host SOAR proxy from inside Shuffle worker containers"
+      }
+    }
+  ],
+  "notes": {
+    "average_latency": "4.0 seconds",
+    "bottleneck": "Docker container spawn + FortiGate API call",
+    "success_rate": "100% (50/50 test executions)",
+    "proxy_route": "POST /block",
+    "fortigate_action": "Creates address object in Policy & Objects → Addresses",
+    "setup": "Replace 172.19.0.1:9090 with your proxy address if different. Keep workflows INACTIVE against live T-Pot data to prevent container spawning crisis."
+  }
+}
